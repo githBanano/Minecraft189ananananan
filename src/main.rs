@@ -71,8 +71,8 @@ impl PlayerCamera {
             up: Vec3::Y,
             fovy: 70.0,
             aspect: Some(screen_width() / screen_height()),
-            near: 0.05,
-            far: 500.0,
+            z_near: 0.05,
+            z_far: 500.0,
             ..Default::default()
         });
     }
