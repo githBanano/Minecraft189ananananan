@@ -1,47 +1,55 @@
-# Minecraft 1.8.9 — Rust Reimplementation
+# Minecraft 1.8.9 — Rust Port
 
-An independent, from-scratch Rust project aiming to reproduce the gameplay and client behavior of **Minecraft Java Edition 1.8.9** on Windows without requiring a JVM at runtime.
+Projeto de reimplementação/portabilidade do **Minecraft: Java Edition 1.8.9** para Rust e Windows.
 
-> **Status: early prototype.** This repository is not yet a complete Minecraft client. The current milestone is a native window, a first-person camera, and a small procedural voxel terrain prototype. Gameplay parity, save compatibility, assets, and multiplayer are future milestones.
+> **Estado real:** ainda não é um port jogável. O protótipo anterior de terreno genérico não representava Minecraft e foi retirado. Este repositório passa a ser dedicado à compatibilidade com a versão 1.8.9, não a criar um jogo voxel inspirado nela.
 
-## Principles
-- Rust-native runtime; no Java VM required by the finished client.
-- Reimplement systems independently; do not copy Mojang's proprietary source code.
-- Use resources from the user's own legally obtained Minecraft installation where permitted; do not redistribute Mojang assets or the original client JAR.
-- Treat Minecraft 1.8.9 behavior and protocol 47 as compatibility targets.
+## Objetivo
 
-## Build on Windows
-Install the stable Rust toolchain with [rustup](https://rustup.rs/), then run:
+Construir um cliente Rust que reproduza o Minecraft 1.8.9, incluindo:
+- menus, opções e HUD da versão;
+- carregamento dos recursos da instalação legítima do jogador;
+- mundo em chunks, blocos, iluminação e renderização;
+- controles, câmera, colisão, física e interação com blocos;
+- inventário, hotbar, crafting e entidades;
+- mundos singleplayer e salvamento;
+- cliente multiplayer compatível com o protocolo 47 (1.8.x).
+
+## Abordagem técnica
+
+O código original completo do Minecraft Java não é fornecido neste repositório. Portanto, isto não é uma conversão automática de arquivos Java para Rust. A implementação será uma reimplementação independente baseada no comportamento observável e nas especificações públicas, sem incluir código-fonte descompilado ou redistribuir assets proprietários.
+
+Os recursos gráficos/sons devem ser obtidos da instalação legítima do próprio jogador, respeitando os termos aplicáveis. O objetivo é evitar que o jogador tenha de selecionar manualmente um arquivo `data.win` ou fornecer recursos a cada execução: o launcher/cliente deverá localizar uma instalação configurada e validar os recursos uma vez.
+
+## Estrutura planejada
+
+- `src/main.rs`: inicialização do cliente.
+- `src/game/`: estado, tick e ciclo de vida.
+- `src/render/`: renderer, câmera, atlas e chunks.
+- `src/world/`: blocos, chunks, geração e salvamento.
+- `src/player/`: input, movimento, colisão e inventário.
+- `src/network/`: protocolo 47 e conexão multiplayer.
+- `src/resources/`: descoberta e leitura dos recursos locais.
+
+## Compilar (Windows)
+
+Instale Rust stable e execute:
 
 ```powershell
-cargo run
+cargo check
+cargo run --release
 ```
 
-Release build:
+O workflow do GitHub Actions valida a compilação para Windows.
 
-```powershell
-cargo build --release
-```
+## Marcos
 
-Executable: `target/release/minecraft189-rust.exe`.
+1. Base de cliente Rust e descoberta de recursos 1.8.9.
+2. Renderer de blocos/chunks e câmera em primeira pessoa.
+3. Movimento, colisão, quebrar/colocar blocos e HUD.
+4. Mundos locais, geração e salvamento.
+5. Inventário, crafting, entidades e demais mecânicas.
+6. Protocolo 47, multiplayer e compatibilidade de servidor.
+7. Testes de paridade visual e funcional com Minecraft 1.8.9.
 
-## Controls (prototype)
-- WASD: move
-- Mouse: look
-- Space: move up
-- Left Shift: move down
-- Escape: release mouse cursor
-
-Click the game window to capture the mouse.
-
-## Roadmap
-1. Native window, input, camera, and voxel prototype.
-2. Chunk data model, meshing, frustum culling, and lighting.
-3. Minecraft 1.8.9 terrain generation and block registry.
-4. Player physics, collision, interaction, inventory, and UI.
-5. Entities, mobs, crafting, redstone, audio, and world persistence.
-6. Protocol 47 multiplayer and authentication integration.
-7. Compatibility testing against legal 1.8.9 reference behavior.
-
-## Legal
-Minecraft is a trademark of Mojang Studios. This is an independent, unofficial compatibility project and is not endorsed by or affiliated with Mojang or Microsoft. Minecraft code, trademarks, and assets are not included. Users are responsible for obtaining and using game resources lawfully.
+Cada marco só será marcado como concluído depois de implementado e testado. Não será anunciado como Minecraft completo enquanto não for.
